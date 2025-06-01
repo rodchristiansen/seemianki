@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String?
+  role      Role      @default(ADMIN)
+  sessions  Session[]
+  createdAt DateTime  @default(now())
+}
+
+model Session {
+  id      String   @id @default(cuid())
+  user    User     @relation(fields: [userId], references: [id])
+  userId  String
+  expires DateTime
+}
+
+model Device {
+  id          String   @id @default(cuid())
+  serial      String   @unique
+  hostname    String
+  platform    String // macOS | Windows | Linux
+  lastCheckIn DateTime @db.Timestamptz(6)
+
+  modules Module[] @relation("DeviceModules")
+  reports Report[]
+}
+
+model Module {
+  id      String @id @default(cuid())
+  name    String @unique
+  version String
+
+  devices Device[] @relation("DeviceModules")
+  reports Report[]
+}
+
+model Report {
+  id        String   @id @default(cuid())
+  device    Device   @relation(fields: [deviceId], references: [id])
+  deviceId  String
+  module    Module   @relation(fields: [moduleId], references: [id])
+  moduleId  String
+  payload   Json
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  MAINTAINER
+  VIEWER
+}
+
+/// --- Core inventory for Windows runners ---
+model WindowsRun {
+  id       String           @id @default(cuid())
+  serial   String
+  hostname String
+  lastSeen DateTime         @default(now())
+  status   String           @default("ok") // success | error
+  events   Event[]
+  installs ManagedInstall[]
+
+  @@index([lastSeen])
+}
+
+model Event {
+  id      String     @id @default(cuid())
+  run     WindowsRun @relation(fields: [runId], references: [id])
+  runId   String
+  time    DateTime
+  level   String // info | warn | error
+  message String
+}
+
+model ManagedInstall {
+  id      String     @id @default(cuid())
+  run     WindowsRun @relation(fields: [runId], references: [id])
+  runId   String
+  name    String
+  version String
+  action  String // install | remove | update
+  result  String // success | fail
+}
