@@ -1,36 +1,90 @@
-# This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app)
+# Seemianki – **UNDER CONSTRUCTION**
 
-## Getting Started
+Monitoring & reporting dashboard for **Mac and Windows** devices.
+Powered by lightweight **osquery** telemetry and a modern **T3** stack—Next.js, Prisma, tRPC, Tailwind—packaged for easy deployment with Docker.
 
-First, run the development server:
+## Project Goals
+
+* Provide a single, real‑time view of hardware, software, and security posture across mixed fleets.
+* Offer extensible modules (inventory, patch compliance, vulnerability insights) without vendor lock‑in.
+* Remain **agent‑agnostic** (starting with osquery) and **cloud‑agnostic** via container deployment.
+* **Future**: Extend support to Linux endpoints as osquery coverage allows.
+* Embrace open‑source values: transparency, auditability, and community‑driven features.
+
+## Tech Stack
+
+* **Next.js** — React framework (App Router + Server Components) that powers both the UI and API routes, giving us seamless SSR/ISR and edge‑ready deployment.
+* **Prisma ORM** — Type‑safe database layer on top of **PostgreSQL**, providing declarative schema migrations and autotyped queries.
+* **tRPC** — End‑to‑end types for zero‑overhead API calls between the Next.js server and React clients.
+* **Tailwind CSS** & **shadcn/ui** — Utility‑first styling plus accessible component library for rapid, consistent UI development.
+* **Recharts** — Composable charting library used for all dashboard graphs and time‑series visualisations.
+* \*\*Docker \*\* — Containerized web app and services; `docker compose` spins up the full stack locally while the same image pushes to any registry for production.
+* **osquery** — Lightweight, cross‑platform agent that streams hardware, software, and security events from endpoints.
+
+## Quick Start (Development)
+
+ Start (Development)
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# 1. Clone the repo
+git clone https://github.com/your‑org/seemianki.git
+cd seemianki
+
+# 2. Install dependencies (pnpm recommended)
+pnpm install
+
+# 3. Copy environment template & tweak
+cp .env.example .env.local
+#   – set DATABASE_URL, NEXTAUTH_SECRET, etc.
+
+# 4. Launch dev stack (db + web)
+docker compose up -d db         # starts PostgreSQL
+pnpm dev                        # Next.js on http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Production Deployment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Build the Docker image:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   docker build -t ghcr.io/your‑org/seemianki:latest .
+   ```
 
-## Learn More
+2. Run with your preferred orchestrator (Docker Compose, Kubernetes, Fly.io, etc.)
+   Supply environment variables for the database, secrets, and TLS.
 
-To learn more about Next.js, take a look at the following resources:
+A reference `docker‑compose.yml` lives in `/deploy/` for quick trials.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Roadmap
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### MVP (v0.1) — UI & Core Inventory
 
-## Deploy on Vercel
+* **UI foundation** – build reusable graph, table, and dashboard components (shadcn/ui + Recharts) to visualise data fast.
+* **Hardware & software inventory** – ingest via osquery.
+* **Munki & Cimian hooks** – add stub modules to accept data from [Munki swift‑cli](https://github.com/munki/munki/tree/swift-cli) and [Cimian](https://github.com/windowsadmins/cimian/tree/dev).
+* Simple auth & project scaffolding.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Phase 1 (v0.2) — MunkiReport Parity
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* Replicate key MunkiReport modules (inventory, install\_history, disk\_report, network, security).
+* Event pipeline for Munki/Cimian post‑flight JSON uploads.
+* Configurable widgets & saved dashboard layouts.
+
+### Phase 2 (v0.3) — Advanced Visualisations
+
+* Drill‑down views, filtering, and search.
+* Time‑series compliance & failure trends.
+* Alert thresholds & e‑mail / Slack hooks.
+
+### Phase 3 (v0.4) — Extensibility
+
+* Public SDK for custom modules.
+* Webhook/event bus for external integrations.
+* Role‑based access control (RBAC).
+
+### Phase 4 (v1.0) — Production Hardening
+
+* Multi‑tenant & HA deployment (Kubernetes Helm chart).
+* Complete docs, migration tooling, and upgrade paths.
+
+##
