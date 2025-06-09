@@ -1,4 +1,4 @@
-# Seemianki – **UNDER CONSTRUCTION**
+# Seemianki – **UNDER PLANNING & EARLY DEVELOPMENT**
 
 Monitoring & reporting dashboard for **Mac and Windows** devices.
 Powered by lightweight **osquery** telemetry and a modern **T3** stack—Next.js, Prisma, tRPC, Tailwind—packaged for easy deployment with Docker.
@@ -9,7 +9,8 @@ Powered by lightweight **osquery** telemetry and a modern **T3** stack—Next.js
 * Offer extensible modules (inventory, patch compliance, vulnerability insights) without vendor lock‑in.
 * Remain **agent‑agnostic** (starting with osquery) and **cloud‑agnostic** via container deployment.
 * **Future**: Extend support to Linux endpoints as osquery coverage allows.
-* Embrace open‑source values: transparency, auditability, and community‑driven features.
+* Support **single sign‑on (SSO)** for Microsoft Entra, Google, and generic SAML providers.
+* Embrace open‑source values: transparency, audibility, and community‑driven features.
 
 ## Tech Stack
 
@@ -18,7 +19,7 @@ Powered by lightweight **osquery** telemetry and a modern **T3** stack—Next.js
 * **tRPC** — End‑to‑end types for zero‑overhead API calls between the Next.js server and React clients.
 * **Tailwind CSS** & **shadcn/ui** — Utility‑first styling plus accessible component library for rapid, consistent UI development.
 * **Recharts** — Composable charting library used for all dashboard graphs and time‑series visualisations.
-* \*\*Docker \*\* — Containerized web app and services; `docker compose` spins up the full stack locally while the same image pushes to any registry for production.
+* **Docker** — Containerized web app and services; `docker compose` spins up the full stack locally while the same image pushes to any registry for production.
 * **osquery** — Lightweight, cross‑platform agent that streams hardware, software, and security events from endpoints.
 
 ## Quick Start (Development)
@@ -61,7 +62,7 @@ A reference `docker‑compose.yml` lives in `/deploy/` for quick trials.
 
 * **UI foundation** – build reusable graph, table, and dashboard components (shadcn/ui + Recharts) to visualise data fast.
 * **Hardware & software inventory** – ingest via osquery.
-* **Munki & Cimian hooks** – add stub modules to accept data from [Munki swift‑cli](https://github.com/munki/munki/tree/swift-cli) and [Cimian](https://github.com/windowsadmins/cimian/tree/dev).
+* **Munki & Cimian hooks** – add stub modules to accept data from [Munki](https://github.com/munki/munki/tree/swift-cli) and [Cimian](https://github.com/windowsadmins/cimian/tree/dev).
 * Simple auth & project scaffolding.
 
 ### Phase 1 (v0.2) — MunkiReport Parity
